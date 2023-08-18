@@ -19,8 +19,18 @@ docker info
 
 # Clone Docker socket
 git clone https://github.com/wardviaene/jenkins-docker.git
+
+# Change jenkins_home permissions
+mkdir -p /var/jenkins_home
+chown -R 1000:992 /var/jenkins_home/
+
 # Change GID from 999 to Docker group on your system. Can check via "getent group docker" command.
 docker build -t jenkins-docker .
 
 # Start Jenkins container on Docker
 docker run -p 8080:8080 -p 50000:50000 -v /var/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -d --name jenkins jenkins-docker
+docker update --restart always jenkins
+
+# Install JRE 11 and JDK 11
+sudo dnf install java-11-amazon-corretto
+sudo dnf install java-11-amazon-corretto-devel
